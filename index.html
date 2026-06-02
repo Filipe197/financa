@@ -195,6 +195,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .pin-key:active{background:var(--bg3);}
 .pin-key.del{font-size:18px;color:var(--text2);}
 .pin-key.empty{background:transparent;border:none;cursor:default;}
+.pin-logo{margin-bottom:12px;}
+.pin-logo svg{filter:drop-shadow(0 8px 24px rgba(167,139,250,0.4));}
 .pin-error{font-size:13px;color:var(--red);margin-top:16px;min-height:20px;text-align:center;}
 /* SETTINGS ROWS */
 .settings-row{display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;}
@@ -222,8 +224,34 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 
 <!-- ===== PIN LOCK ===== -->
 <div id="pin-screen" class="hidden">
-  <div class="pin-logo">₢</div>
-  <div class="pin-title" id="pin-title">Digite seu PIN</div>
+  <div class="pin-logo">
+    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="64" height="64" rx="18" fill="#1A1A1A"/>
+      <rect width="64" height="64" rx="18" fill="url(#lg1)"/>
+      <path d="M20 38 C20 38 24 28 32 28 C40 28 44 38 44 38" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.15"/>
+      <path d="M32 18 L32 46" stroke="url(#lg2)" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+      <path d="M22 26 L42 26" stroke="url(#lg2)" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+      <rect x="21" y="20" width="22" height="24" rx="4" fill="url(#lg3)" opacity="0.9"/>
+      <path d="M27 29 L30.5 33 L37 26" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="46" cy="20" r="6" fill="#4ADE80"/>
+      <path d="M43.5 20 L45.2 21.8 L48.5 18.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <defs>
+        <linearGradient id="lg1" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#1e1b4b"/>
+          <stop offset="100%" stop-color="#0A0A0A"/>
+        </linearGradient>
+        <linearGradient id="lg2" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#A78BFA"/>
+          <stop offset="1" stop-color="#7C3AED"/>
+        </linearGradient>
+        <linearGradient id="lg3" x1="21" y1="20" x2="43" y2="44" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#A78BFA"/>
+          <stop offset="1" stop-color="#7C3AED"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+  <div class="pin-title" id="pin-title">Finança</div>
   <div class="pin-sub" id="pin-sub">Acesso protegido</div>
   <div class="pin-dots" id="pin-dots">
     <div class="pin-dot" id="pd0"></div>
@@ -1136,7 +1164,12 @@ function toast(msg,icon='ti-check'){
 }
 
 function injectManifest(){
-  const m={name:'Finança',short_name:'Finança',start_url:'.',display:'standalone',background_color:'#0A0A0A',theme_color:'#0A0A0A',orientation:'portrait',icons:[{src:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="40" fill="%230A0A0A"/><text x="96" y="130" text-anchor="middle" font-size="110" font-family="serif" fill="%23A78BFA">₢</text></svg>',sizes:'192x192',type:'image/svg+xml'}]};
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><defs><linearGradient id="a" x1="0" y1="0" x2="192" y2="192" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="%231e1b4b"/><stop offset="100%" stop-color="%230A0A0A"/></linearGradient><linearGradient id="b" x1="60" y1="60" x2="132" y2="132" gradientUnits="userSpaceOnUse"><stop stop-color="%23A78BFA"/><stop offset="1" stop-color="%237C3AED"/></linearGradient></defs><rect width="192" height="192" rx="44" fill="url(%23a)"/><rect x="58" y="56" width="76" height="82" rx="14" fill="url(%23b)" opacity="0.95"/><path d="M80 86 L90 98 L112 76" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="142" cy="58" r="20" fill="%234ADE80"/><path d="M133 58 L139 64 L151 52" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const m={name:'Finança',short_name:'Finança',start_url:'.',display:'standalone',background_color:'#0A0A0A',theme_color:'#0A0A0A',orientation:'portrait',
+    icons:[
+      {src:'data:image/svg+xml,'+svg.replace(/#/g,'%23'),sizes:'192x192',type:'image/svg+xml'},
+      {src:'data:image/svg+xml,'+svg.replace(/#/g,'%23'),sizes:'512x512',type:'image/svg+xml'}
+    ]};
   document.getElementById('pwa-manifest').href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/json'}));
 }
 function registerSW(){
