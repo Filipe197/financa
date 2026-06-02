@@ -200,6 +200,9 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     </div>
     <div class="topbar-right">
       <div class="salary-badge" onclick="openSalaryModal()" id="salary-badge">+ salário</div>
+      <div class="icon-btn" onclick="refreshHome()" title="Atualizar" id="refresh-btn">
+        <i class="ti ti-refresh" id="refresh-icon"></i>
+      </div>
       <div class="icon-btn" onclick="showNotifications()" style="position:relative;" id="notif-btn">
         <i class="ti ti-bell"></i>
         <div class="notif-badge hidden" id="notif-badge"></div>
@@ -1031,6 +1034,22 @@ function exportPDF(){
       toast('PDF exportado!');
     }catch(ex){toast('Erro ao gerar PDF','ti-alert-triangle');console.error(ex);}
   },300);
+}
+ 
+/* REFRESH */
+function refreshHome(){
+  const icon=document.getElementById('refresh-icon');
+  icon.style.transition='transform 0.5s ease';
+  icon.style.transform='rotate(360deg)';
+  setTimeout(()=>{icon.style.transition='none';icon.style.transform='rotate(0deg)';},520);
+  // reload state from localStorage in case another tab/session wrote data
+  state.entries  = DB.get('entries')  || state.entries;
+  state.expenses = DB.get('expenses') || state.expenses;
+  state.bills    = DB.get('bills')    || state.bills;
+  state.goals    = DB.get('goals')    || state.goals;
+  state.salary   = DB.get('salary')   || state.salary;
+  renderHome();
+  toast('Dados atualizados!');
 }
  
 /* ===== BACKUP ===== */
