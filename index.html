@@ -756,10 +756,18 @@ function openGDriveSetup(){
 }
 
 function gdriveAuth(){
-  if(!gdriveClientId){openGDriveSetup();return;}
-  const redirect=location.href.split('?')[0].split('#')[0];
-  const url=`https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(gdriveClientId)}&redirect_uri=${encodeURIComponent(redirect)}&response_type=token&scope=${encodeURIComponent(GDRIVE_SCOPE)}&prompt=consent`;
-  window.location.href=url;
+  if(!gdriveClientId){toast('Client ID não configurado','ti-alert-triangle');return;}
+  const redirect='https://filipe197.github.io/financa/';
+  const url='https://accounts.google.com/o/oauth2/v2/auth'
+    +'?client_id='+encodeURIComponent(gdriveClientId)
+    +'&redirect_uri='+encodeURIComponent(redirect)
+    +'&response_type=token'
+    +'&scope='+encodeURIComponent(GDRIVE_SCOPE)
+    +'&prompt=consent'
+    +'&include_granted_scopes=true';
+  // Save current page state before redirecting
+  DB.set('gdrive_auth_pending','1');
+  window.location.assign(url);
 }
 
 function handleGDriveCallback(){
@@ -768,10 +776,13 @@ function handleGDriveCallback(){
   const params=new URLSearchParams(hash.replace('#',''));
   const token=params.get('access_token');
   if(token){
-    gdriveToken=token;DB.set('gdrive_token',token);
-    history.replaceState(null,'',location.pathname);
+    gdriveToken=token;
+    DB.set('gdrive_token',token);
+    DB.set('gdrive_auth_pending',null);
+    // Clean URL
+    history.replaceState(null,'','/financa/');
     toast('Google Drive conectado!');
-    gdriveSyncNow();
+    setTimeout(()=>gdriveSyncNow(),500);
   }
 }
 
